@@ -5,7 +5,7 @@ import streamlit as st
 # import adfun
 
 st.set_page_config(
-                    page_title="GT-Web_App_Demo",
+                    page_title="MasterChallenge_Andy_Demo",
                     # page_icon=icon,
                     layout="wide",
                     initial_sidebar_state="expanded",
@@ -27,3 +27,6 @@ pg=st.navigation(pages)
 pg.run()
 
 print("Andy")
+
+
+
