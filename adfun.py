@@ -2,7 +2,8 @@
 import pandas as pd
 import numpy as np
 import win32com.client
-
+import comtypes.client
+import array
 
 class mydpfun(object):
     @staticmethod
@@ -257,6 +258,7 @@ class mydpfun(object):
             coord=dp.SystemService.evaluate(code,1, "GetPointCoord",[pt])
             return coord
 
+        
         @staticmethod
         def measureGetRadius(circleObject):
             doc = mydpfun.getDpApplication().activedocument
@@ -276,6 +278,7 @@ class mydpfun(object):
             measurable1 = spaworkbench1.GetMeasurable(obj1)
             minimumdistance1 = measurable1.GetMinimumDistance(obj2)
             return minimumdistance1
+
 
 
 
@@ -405,6 +408,15 @@ class mydpfun(object):
                 resultGeo.appendhybridshape(line)
                 if updatebool == True: part.updateobject(line)
                 return line
+
+        @staticmethod
+        def create_SweepCircle_Surface(part,hsf,resultGeo,curve,radius=200):
+            referenceLine=part.CreateReferenceFromObject(curve)
+            sweepCircle=hsf.AddNewSweepCircle(referenceLine)
+            sweepCircle.Mode=6
+            sweepCircle.SetRadius(1,radius)
+            resultGeo.AppendHybridShape(sweepCircle)
+            return sweepCircle
 
         @staticmethod
         def createHybridBody(hybridbodies_Object,hybridbody_Name="tempgeo"):
@@ -594,13 +606,35 @@ class mydpfun(object):
     class search:
         pass
 
+class mycadfun(object):
+    @staticmethod
+    def getAutocadApp():
+        # myapp =  win32com.client.dynamic.Dispatch("Autocad.Application")
+        myapp =  comtypes.client.GetActiveObject("Autocad.Application")
+        return myapp 
 
+    @staticmethod
+    def getActiveDocument(app):
+        doc=app.ActiveDocument
+        return doc
+    @staticmethod
+    def getModelSpace(doc):
+        myModelSpace=doc.ModelSpace
+        return myModelSpace
 
-
-
-
-
-
+    @staticmethod
+    def createPointByCoords(ms,x,y,z):
+        coords=array.array('d',[x,y,z])
+        pt=ms.AddPoint(coords)
+        return pt
+    @staticmethod
+    def createLineByPTPT_Coordinates(ms,x1,y1,z1,x2,y2,z2):
+        coords1=array.array('d',[x1,y1,z1])
+        coords2=array.array('d',[x2,y2,z2])
+        line=ms.AddLine(coords1,coords2)
+        return line
+    
+    
 if __name__ == "__main__":
     dp = mydpfun.getDpApplication()
     doc=dp.ActiveDocument

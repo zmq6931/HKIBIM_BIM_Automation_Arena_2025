@@ -2,3 +2,6 @@ streamlit
 pywin32
 pyxll
 streamlit-flow-component
+plotly
+matlabengine==24.2.2
+

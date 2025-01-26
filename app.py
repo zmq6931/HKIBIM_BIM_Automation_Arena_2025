@@ -17,7 +17,7 @@ st.set_page_config(
 pages={
         "🌟Master Challenge": [
         st.Page(r"pages/Master Challenge Question.py", title="🌟- Question"),
-        st.Page(r"pages/demo.py", title="🌟- Demo"),
+        st.Page(r"pages/demo.py", title="🌟- Demo1"),
                              ],      
 }
 
@@ -26,7 +26,7 @@ pg=st.navigation(pages)
 
 pg.run()
 
-print("Andy")
+print("ad")
 
 
 
