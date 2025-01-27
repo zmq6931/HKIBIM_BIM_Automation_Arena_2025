@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 import math
 import array
+import os
 try:
     import adfun as adfun
 except:
@@ -338,7 +339,73 @@ if btn_drawing_generation:
     
     
     st.write(doc.Name)
+drawing_expander=st.expander("Drawing_Expander")    
+with drawing_expander:
+    st.video(r"image/demo1_drawing_generation/drawing_generation.mp4",format="video/mp4",autoplay=True,loop=True)
+        
     
+#endregion
+
+#region 10. Lighting
+st.write("### 10. Lighting")
+btn_lighting=st.button("Lighting",use_container_width=True)
+if btn_lighting:
+    import os
+    import matlab.engine
+    eng=matlab.engine.start_matlab()
+    eng.run(r"C:\Andy\github\HKIBIM_BIM_Automation_Arena_2025\mat\matlab_demo1.m",nargout=0)
+lighting_expander=st.expander("Lighting_Expander")    
+with lighting_expander:
+    col1,col2=st.columns(2)
+    with col1:
+        st.image(r"image/demo1_lighting/pic2.png")
+    with col2:
+        st.image(r"image/demo1_lighting/pic3.png")
+    st.divider()
+    st.video(r"image/demo1_lighting/lighting.mp4",format="video/mp4",autoplay=True,loop=True)
+    st.divider()    
+    code="""
+data=readtable('demo1.csv');
+
+x1=data.pt1x;   
+y1=data.pt1y;
+z1=data.pt1z;
+x2=data.pt2x;
+y2=data.pt2y;
+z2=data.pt2z;
+
+colormap(jet);
+colorbar;
+h1 = scatter3(x1, y1, z1,30,z1, 'filled');
+axis equal;
+hold on;
+h2 = scatter3(x2, y2, z2,30,z2, 'filled');
+xlabel('X');
+ylabel('Y');
+zlabel('Z');
+title('3D Point Animation from Blue to White');
+grid on;
+% count=numel(x1);
+% animationTime = 20; 
+% j = 1; 
+
+frames=5000;
+for t=1:frames
+    color_shift = sin(2 * pi * t / frames);
+    c = (y1 - min(y1)) / (max(y1) - min(y1));
+    c = c + color_shift;
+    c = mod(c, 1);
+    h1.CData = c;
+    h2.CData = c;
+    pause(0.0005);
+end
+    """
     
-    #endregion
-    print("finished")
+    # st.markdown(f'<div class="code-container"><pre>{code}</pre></div>', unsafe_allow_html=True)
+
+    st.code(code,language="matlab",wrap_lines=True)
+#endregion
+
+
+
+print("finished")
