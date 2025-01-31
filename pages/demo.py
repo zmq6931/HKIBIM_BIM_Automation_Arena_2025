@@ -93,6 +93,7 @@ if btn_change_parameter:
     panel_W.Value=input_panel_W
     panel_L.Value=input_panel_L
     pt_Distance.Value=input_pt_Distance
+    
 
 #endregion
 
@@ -119,6 +120,9 @@ if btn_generate_points:
             parameters=[part,hsf,tempgeo,curve,pt_Distance.Value],
             CatScriptLibraryType =1)
 
+Generate_Points_expander=st.expander("Generate_Points_expander")
+with Generate_Points_expander:
+    st.video(r"image/demo1_step5/generate points_2.mp4",format="video/mp4",autoplay=True,loop=True)
 #endregion
 
 #region 6. Generate Panel
@@ -188,6 +192,9 @@ if btn_generate_panel:
         # if i>2:                
         #     break  
 
+Generate_Panels_expander=st.expander("Generate_Panels_expander")
+with Generate_Panels_expander:
+    st.video(r"image/demo1_step6/generatePanel_2.mp4",format="video/mp4",autoplay=True,loop=True)
 #endregion
 
 #region 7. Generate Transoms
@@ -233,8 +240,9 @@ if btn_generate_transoms:
                 # subgeo.AppendHybridShape(sweepCircle)
         part.Update() 
         # break   
-                
-
+Generate_Transoms_expander=st.expander("Generate_Transoms_expander")
+with Generate_Transoms_expander:
+    st.video(r"image/demo1_step7/transomGenerate_2.mp4",format="video/mp4",autoplay=True,loop=True)
 #endregion
 
 #region 8. Extract Information
@@ -297,7 +305,9 @@ if btn_extract_information:
     
     fig2=px.line(dfTransoms,x="name",y="length",title="Transoms Length")
     st.plotly_chart(fig2,use_container_width=True)
-
+Extract_Information_expander=st.expander("Extract_Information_expander")
+with Extract_Information_expander:
+    st.video(r"image/demo1_extract_information/extract_information.mp4",format="video/mp4",autoplay=True,loop=True)
 #endregion
 
 
