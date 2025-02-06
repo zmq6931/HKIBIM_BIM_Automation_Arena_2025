@@ -17,7 +17,8 @@ st.set_page_config(
 pages={
         "🌟Master Challenge": [
         st.Page(r"pages/Master Challenge Question.py", title="🌟- Question"),
-        st.Page(r"pages/demo.py", title="🌟- Demo1"),
+        st.Page(r"pages/demo1.py", title="🌟- Demo1"),
+        st.Page(r"pages/demo2.py", title="🌟- Demo2"),
                              ],      
 }
 

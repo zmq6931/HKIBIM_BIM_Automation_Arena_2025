@@ -22,7 +22,7 @@ def dimensionPtPt(modelSpace, pt1,pt2, TextPosition,TextHeight=100):
     dimension1.TextHeight=TextHeight
 
 st.title("HKIBIM_BIM_Automation_Arena_2025")
-st.subheader("Master Challenge Demo")
+st.subheader("Master Challenge Demo1")
 
 
 #region 1. Extract wireframe from rhino model
@@ -308,6 +308,7 @@ if btn_extract_information:
 Extract_Information_expander=st.expander("Extract_Information_expander")
 with Extract_Information_expander:
     st.video(r"image/demo1_extract_information/extract_information.mp4",format="video/mp4",autoplay=True,loop=True)
+    st.image(r"image/demo1_extract_information/pic1.png")
 #endregion
 
 
@@ -416,6 +417,19 @@ end
     st.code(code,language="matlab",wrap_lines=True)
 #endregion
 
+#region 11. Greenery
+st.write("### 11. Greenery")
+Greenery_expander=st.expander("Greenery_Expander")
+with Greenery_expander:
+    col1,col2=st.columns([1.5,2.2],border=True)
+    with col1:
+        st.write("Solution 1")
+        st.image(r"image/demo1_greenery/pic1.png")
+        st.image(r"image/demo1_greenery/pic2.png")
+    with col2:
+        st.write("Solution 2")
+        st.image(r"image/demo1_greenery/pic3.png",use_container_width=True)
 
+#endregion
 
 print("finished")
