@@ -1,4 +1,8 @@
 import rhinoscriptsyntax as rs
+from rhfun import myfun as rhfun
+
+
+
 
 
 @staticmethod
@@ -18,15 +22,18 @@ def equalDistancePointOnCurve(curve,distance,reserveBool=False):
     return temp
 
 # surf1_layer = rs.CurrentLayer("surf1")
-result1_layer = rs.CurrentLayer("result1")
-layer_objects = rs.ObjectsByLayer("surf1")
 
-surf1_crv=[obj for obj in layer_objects if rs.IsCurve(obj)][0]
-
-mid_pt=rs.CurveMidPoint(surf1_crv)
+result1_layer=rhfun.layer.getLayerByName("result1")
+result2_layer=rhfun.layer.getLayerByName("result2")
 
 
-pt=rs.AddPoint(mid_pt)
+surf1_layer_objects = rs.ObjectsByLayer("surf1")
+surf1_crv=[obj for obj in surf1_layer_objects if rs.IsCurve(obj)][0]
+
+
+print(rhfun.get.get_object_name(surf1_crv))
+
+print("finished")
 
 
 
