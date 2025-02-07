@@ -123,12 +123,12 @@ class myfun(object):
         def getPointCoords(pt):
             return rs.PointCoordinates(pt)
         @staticmethod
-        def equalDistancePointOnCurve(curve,distance,reserveBool=False):
+        def equalDistancePointOnCurve(curve,distance,reserveBool=False,returnPoints=True):
             """点距离相等"""
             if reserveBool:
                 rs.ReverseCurve(curve)
             temp=[]
-            ptlist=rs.DivideCurveEquidistant(curve,distance,True)
+            ptlist=rs.DivideCurveEquidistant(curve,distance,True,returnPoints)
             # for pt in ptlist:
             #     temp.append(pt)  
             temp.extend(ptlist)
@@ -268,8 +268,18 @@ class myfun(object):
             layer_objects = rs.ObjectsByLayer(layerName)
             surfaces=[obj for obj in layer_objects if rs.IsSurface(obj)]
             return surfaces
+    class plane:
+        @staticmethod
+        def create_surface_normal_plane_by_pt(surface,pt, bool_if_create_plane_surface=False):
+            param = rs.SurfaceClosestPoint(surface, pt)
+            normal=rs.SurfaceNormal(surface,param)
+            plane=rs.PlaneFromNormal(pt,normal)
+            if bool_if_create_plane_surface:
+                rs.AddPlaneSurface(plane,500,500)
+            return plane
 
-            
+
+
     class useful_Fun:
         @staticmethod
         def export_objects_by_layer(folderPath,layerName,formatString=".igs"):
