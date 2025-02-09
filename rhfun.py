@@ -10,7 +10,7 @@ import sys as sys
 import System
 import time , os,shutil
 import scriptcontext as sc
-
+import math
 
 
 class folder_files(object):
@@ -109,6 +109,13 @@ class myfun(object):
         @staticmethod
         def createLinePtPt(pt1,pt2):
             return rs.AddLine(pt1,pt2)
+        @staticmethod
+        def create_Normal_Line(plane,pt,length=1000):
+            normal=myfun.plane.get_plane_normal(plane)
+            scaled_normal = rs.VectorScale(normal, length)
+            normal_line = rs.AddLine(pt, rs.PointAdd(pt, scaled_normal))
+            return normal_line
+                            
     class point:
         @staticmethod
         def createPointByCoord(x,y,z):
@@ -277,9 +284,123 @@ class myfun(object):
             if bool_if_create_plane_surface:
                 rs.AddPlaneSurface(plane,500,500)
             return plane
+        @staticmethod
+        def set_current_cplane(plane):
+            rs.ViewCPlane(None, plane)
+        @staticmethod
+        def get_plane_normal(plane):
+            return plane.ZAxis
+    class hexagon:
+        @staticmethod
+        def create_hexagonal_edge_6(pt1,pt2):
+            center = [(pt1[0] + pt2[0])/2, (pt1[1] + pt2[1])/2, (pt1[2] + pt2[2])/2]
+            pt2=rs.RotateObject(pt1,center,60,axis=None,copy=True)
+            pt3=rs.RotateObject(pt1,center,120,axis=None,copy=True)
+            PT4=rs.RotateObject(pt1,center,180,axis=None,copy=True)
+            PT5=rs.RotateObject(pt1,center,240,axis=None,copy=True)
+            PT6=rs.RotateObject(pt1,center,300,axis=None,copy=True)
+            tempHexago=rs.AddPolyline([pt1,pt2,pt3,PT4,PT5,PT6,pt1])
+            rs.DeleteObjects([pt2,pt3,PT4,PT5,PT6])
+            return tempHexago
+        @staticmethod
+        def create_hexagonal_edge_6_by_center_pt(workplane, centerPt, startPt, radius=1000):
+            """Create a hexagon on a specified workplane using center point and starting point"""
+            # Set the workplane
+            rs.ViewCPlane(None, workplane)
+            
+            # Project the start point onto the workplane
+            # Get workplane normal
+            normal = workplane.ZAxis
+            # Create vector from center to start point
+            vector = rs.VectorCreate(startPt, centerPt)
+            # Project vector onto workplane
+            projectedVector = rs.VectorSubtract(vector, rs.VectorScale(normal, rs.VectorDotProduct(vector, normal)))
+            # Create projected point
+            projectedPt = rs.PointAdd(centerPt, projectedVector)
+            
+            # Create a new point at fixed distance from center
+            unitVector = rs.VectorUnitize(projectedVector)
+            firstPt = rs.PointAdd(centerPt, rs.VectorScale(unitVector, radius))
+            
+            # Generate hexagon points
+            points = []
+            for i in range(6):
+                # Calculate each point by rotating around center
+                pt = rs.RotateObject(firstPt, centerPt, 60*i, axis=None, copy=True)
+                points.append(rs.PointCoordinates(pt))
+                rs.DeleteObject(pt)
+            
+            # Create the hexagon polyline
+            hexagon = rs.AddPolyline(points + [points[0]])
+            return hexagon
+
+        @staticmethod
+        def create_equilateral_triangle_up(workplane, centerPt, startPt, radius=1000):
+            """Create a hexagon on a specified workplane using center point and starting point"""
+            # Set the workplane
+            rs.ViewCPlane(None, workplane)
+            
+            # Project the start point onto the workplane
+            # Get workplane normal
+            normal = workplane.ZAxis
+            # Create vector from center to start point
+            vector = rs.VectorCreate(startPt, centerPt)
+            # Project vector onto workplane
+            projectedVector = rs.VectorSubtract(vector, rs.VectorScale(normal, rs.VectorDotProduct(vector, normal)))
+            # Create projected point
+            projectedPt = rs.PointAdd(centerPt, projectedVector)
+            
+            # Create a new point at fixed distance from center
+            unitVector = rs.VectorUnitize(projectedVector)
+            firstPt = rs.PointAdd(centerPt, rs.VectorScale(unitVector, radius))
+            
+            # Generate hexagon points
+            points = []
+            for i in range(6):
+                # Calculate each point by rotating around center
+                pt = rs.RotateObject(firstPt, centerPt, 60*i, axis=None, copy=True)
+                points.append(rs.PointCoordinates(pt))
+                rs.DeleteObject(pt)
+            trianglepts=[centerPt,points[1],points[2],centerPt]
+            # Create the hexagon polyline
+            hexagon = rs.AddPolyline(trianglepts)
+            return hexagon
+        @staticmethod
+        def create_equilateral_triangle_bottom(workplane, centerPt, startPt, radius=1000):
+            """Create a hexagon on a specified workplane using center point and starting point"""
+            # Set the workplane
+            rs.ViewCPlane(None, workplane)
+            
+            # Project the start point onto the workplane
+            # Get workplane normal
+            normal = workplane.ZAxis
+            # Create vector from center to start point
+            vector = rs.VectorCreate(startPt, centerPt)
+            # Project vector onto workplane
+            projectedVector = rs.VectorSubtract(vector, rs.VectorScale(normal, rs.VectorDotProduct(vector, normal)))
+            # Create projected point
+            projectedPt = rs.PointAdd(centerPt, projectedVector)
+            
+            # Create a new point at fixed distance from center
+            unitVector = rs.VectorUnitize(projectedVector)
+            firstPt = rs.PointAdd(centerPt, rs.VectorScale(unitVector, radius))
+            
+            # Generate hexagon points
+            points = []
+            for i in range(6):
+                # Calculate each point by rotating around center
+                pt = rs.RotateObject(firstPt, centerPt, 60*i, axis=None, copy=True)
+                points.append(rs.PointCoordinates(pt))
+                rs.DeleteObject(pt)
+            trianglepts=[centerPt,points[4],points[5],centerPt]
+            # Create the hexagon polyline
+            hexagon = rs.AddPolyline(trianglepts)
+            return hexagon
+        
 
 
 
+        
     class useful_Fun:
         @staticmethod
         def export_objects_by_layer(folderPath,layerName,formatString=".igs"):
@@ -405,6 +526,13 @@ class myfun(object):
                 print(name)
             print("finish")
 
+        @staticmethod
+        def export_to_iges(fullpath):
+            rs.UnselectAllObjects()
+            rs.SelectObjects(rs.AllObjects())    
+            fileFullPath = " \""+fullpath+"\""
+            command = "-_Export "+fileFullPath+" Enter"
+            rs.Command(command, True)
 
 
 
