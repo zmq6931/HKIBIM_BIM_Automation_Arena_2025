@@ -28,6 +28,9 @@ pg=st.navigation(pages)
 
 pg.run()
 
+
+st.sidebar.image(r"image/others/Andy1.png",width=120)
+
 print("ad")
 
 

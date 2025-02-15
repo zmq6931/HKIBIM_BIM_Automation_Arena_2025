@@ -2,13 +2,9 @@ import rhinoscriptsyntax as rs
 from rhfun import myfun as rhfun
 import math
 
-
-
-
 h_distance=2500
 thickness=100
 v_distance=h_distance*(math.sqrt(3)/2)
-
 
 result1_layer=rhfun.layer.getLayerByName("result1")
 result2_layer=rhfun.layer.getLayerByName("result2")
@@ -49,10 +45,6 @@ def export_to_iges(fullpath):
     # Execute the export command
     rs.Command(command, True)
     
-
-
-
-
 
 def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer):
     for i in range(0,50):
@@ -137,9 +129,6 @@ def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer):
                                 rs.DeleteObjects(normal_line2)
                             
 
-
-
-
 # create_panel_and_glass1(crv1,surf1,glass1_layer,panel1_layer)
 
 surf2_layer_objects = rs.ObjectsByLayer("surf2")
@@ -149,7 +138,6 @@ surf2=[obj for obj in surf2_layer_objects if rs.IsSurface(obj)][0]
 rs.CurrentLayer(result2_layer)
 
 # create_panel_and_glass1(crv2,surf2,glass2_layer,panel2_layer)
-
 
 export_to_iges(r"C:\Andy\Andy_Collection\AndyZMQ_Personal\2025_Automation\Master_Challenge\demo2_panel.igs")
 
