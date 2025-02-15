@@ -5,12 +5,15 @@ import plotly.express as px
 import math
 import array
 import os
+import streamlit.components.v1 as components
+
 try:
     import adfun as adfun
 except:
     from importlib.machinery import SourceFileLoader
     adfun = SourceFileLoader("module.name",r"adfun.py").load_module()
    
+
 
 def distance_3d(point1, point2):
     x1, y1, z1 = point1
@@ -21,7 +24,7 @@ def dimensionPtPt(modelSpace, pt1,pt2, TextPosition,TextHeight=100):
     dimension1= modelSpace.AddDimAligned(pt1,pt2,TextPosition)
     dimension1.TextHeight=TextHeight
 
-st.title("HKIBIM_BIM_Automation_Arena_2025")
+st.title("HKIBIM_BIM_Automation_Arena_2025 - Andy")
 st.subheader("Master Challenge Demo1")
 
 
@@ -54,6 +57,7 @@ st.divider()
 #region 3. demo1 test   
 st.write("### 3. demo1 test")
 #endregion
+
 
 pythoncom.CoInitialize()
 dp=adfun.mydpfun.getDpApplication()
@@ -432,4 +436,26 @@ with Greenery_expander:
 
 #endregion
 
+
+#region Result
+st.write("### Result")
+result_expander=st.expander("Result_Expander")
+with result_expander:
+    st.write("### Result")
+    url="https://app.speckle.systems/projects/c3c82e786c/models/9ef4cc230f"
+    embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
+
+    components.html(
+        f"""
+    <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
+        """, 
+    height=600  # Set the height explicitly for the component
+    )
+    
+    
+
+
+
 print("finished")
+
+
