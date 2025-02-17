@@ -634,6 +634,15 @@ class mycadfun(object):
         line=ms.AddLine(coords1,coords2)
         return line
     
+    @staticmethod
+    def dimensionPtPt(modelSpace, pt1,pt2, TextPosition,TextHeight=100):
+        dimension1= modelSpace.AddDimAligned(pt1,pt2,TextPosition)
+        dimension1.TextHeight=TextHeight
+
+    @staticmethod
+    def dimension3PointAngular(modelSpace, anglePT,PT1,PT2, TextPosition,TextHeight=100):
+        dimension1=modelSpace.AddDim3PointAngular(anglePT,PT1,PT2,TextPosition)
+        dimension1.TextHeight=TextHeight
     
 if __name__ == "__main__":
     dp = mydpfun.getDpApplication()

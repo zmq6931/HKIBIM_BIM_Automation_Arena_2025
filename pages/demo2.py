@@ -5,9 +5,9 @@ try:
 except:
     from importlib.machinery import SourceFileLoader
     adfun = SourceFileLoader("module.name",r"adfun.py").load_module()
-
-
-
+import array
+import math
+from streamlit.components.v1 import iframe
 
 
 st.title("HKIBIM_BIM_Automation_Arena_2025 - Andy")
@@ -38,10 +38,8 @@ with col1:
         st.write("### Step 2 panel automation")
         st.video(r"image\deom2\rhino_panel_generation.mp4")
 with col2:
-    step2_code_expander=st.expander("Step 2 panel automation code")
-    with step2_code_expander:
-
-        
+    step2_code_expander=st.expander("Step 2 panel automation python code")
+    with step2_code_expander:        
         code="""
 import rhinoscriptsyntax as rs
 from rhfun import myfun as rhfun
@@ -196,15 +194,294 @@ print("finished")
             st.code(code, language='python',wrap_lines=False)
 
 
-# st.container(
-#     st.code(code,language="python"),height=1200,border=2
-# )
+st.divider()
+
+st.write("### Step 3 transom automation")
+step3_transom_expander=st.expander("Step 3 transom automation")
+with step3_transom_expander:
+    st.video(r"image/deom2/rhino_tekla_transom.mp4",format="video/mp4")
+
+    col1,col2=st.columns([2.5,1])
+    with col1:
+        cola,colb=st.columns([1.3,1])
+        with cola:
+            st.image(r"image/deom2/grasshopper_image.png")
+        with colb:
+            st.image(r"image/deom2/tekla_command.png")
+    with col2:
+        st.write("### Tekla - Grasshopper plugin code")
+        code_container=st.container(height=700,border=True)
+        code="""
+using Grasshopper;
+using Grasshopper.Kernel;
+using Rhino.Geometry;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using TSM = Tekla.Structures.Model;
+using TSG = Tekla.Structures.Geometry3d;
+using tkfun = Tekla_Demo.TeklaFun;
+using System.Linq;
+using TSMUI=Tekla.Structures.Model.UI;
 
 
 
 
+namespace HKIBIM_Automation_2025_Demo2
+{
+    public class HKIBIM_Automation_2025_DemoComponent2 : GH_Component
+    {
+        #region Properties
+        bool isConnectToTekla=false;
+        TSM.Model model = null;
+
+        List<int> beamlist =new List<int>();
+
+        #endregion
 
 
+
+        /// <summary>
+        /// Each implementation of GH_Component must provide a public 
+        /// constructor without any arguments.
+        /// Category represents the Tab in which the component will appear, 
+        /// Subcategory the panel. If you use non-existing tab or panel names, 
+        /// new tabs/panels will automatically be created.
+        /// </summary>
+        public HKIBIM_Automation_2025_DemoComponent2()
+          : base("transom generation", "Andy",//HKIBIM_Automation_2025_Demo2Component
+            "transom generation",
+            "HKIBIM_Automation_2025_Demo2", "transom")
+        {
+        }
+
+        /// <summary>
+        /// Registers all the input parameters for this component.
+        /// </summary>
+        protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+        {
+            pManager.AddTextParameter("Profile", "P", "tekla beam Profile", GH_ParamAccess.item, "D100");
+            pManager.AddLineParameter("Line", "L", "line", GH_ParamAccess.list);
+            //pManager.AddBooleanParameter("Run","R","Run",GH_ParamAccess.item,false);
+
+        }
+
+        /// <summary>
+        /// Registers all the output parameters for this component.
+        /// </summary>
+        protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+        {
+            // Use the pManager object to register your output parameters.
+            // Output parameters do not have default values, but they too must have the correct access type.
+
+            //pManager.AddCurveParameter("Spiral", "S", "Spiral curve", GH_ParamAccess.item);
+            
+            // Sometimes you want to hide a specific parameter from the Rhino preview.
+            // You can use the HideParameter() method as a quick way:
+            //pManager.HideParameter(0);
+        }
+
+        protected override void AfterSolveInstance()
+        {
+
+
+        }
+        protected override void BeforeSolveInstance()
+        {
+            model = new TSM.Model();
+
+            isConnectToTekla = model.GetConnectionStatus();
+
+
+            if (isConnectToTekla == false)
+            {
+                MessageBox.Show("Tekla is not connected. Connection status: " + model.GetConnectionStatus().ToString());
+
+            }
+
+            var objs = model.GetModelObjectSelector().GetAllObjects();
+
+            while (objs.MoveNext())
+            {
+                TSM.Beam b = objs.Current as TSM.Beam;
+                if (b != null)
+                {
+                    if (beamlist.Where(x => x == b.Identifier.ID).Count() != 0)
+                    {
+                        beamlist.Remove(b.Identifier.ID);
+                        b.Delete();
+
+                        //MessageBox.Show("ff");
+                    }
+                }
+            }
+            model.CommitChanges();
+
+
+            
+
+
+        }
+
+        
+
+        /// <summary>
+        /// This is the method that actually does the work.
+        /// </summary>
+        /// <param name="DA">The DA object can be used to retrieve data from input parameters and 
+        /// to store data in output parameters.</param>
+        protected override void SolveInstance(IGH_DataAccess DA)
+        {
+            string profile = "D100";
+            bool bool_run = false;
+            List<Line> lines = new List<Line>();
+
+            //Line line=new Line();
+
+
+            if (!DA.GetData(0, ref profile)) return;
+            if (!DA.GetDataList(1, lines)) return;
+            //if (!DA.GetData(2, ref bool_run)) return;
+
+
+            try
+            {
+
+                foreach (Line l in lines)
+                {
+                    Point3d pt1 = l.PointAt(0);
+                    Point3d pt2 = l.PointAt(1);
+
+                    TSG.Point tk_pt1 = new TSG.Point(pt1.X, pt1.Y, pt1.Z);
+                    TSG.Point tk_pt2 = new TSG.Point(pt2.X, pt2.Y, pt2.Z);
+
+                    var beam = tkfun.BeamCreatePtPt(tk_pt1, tk_pt2, profile);
+                    beamlist.Add(beam.Identifier.ID);
+
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            model.CommitChanges();
+
+        }
+
+        Curve CreateSpiral(Plane plane, double r0, double r1, Int32 turns)
+        {
+            Line l0 = new Line(plane.Origin + r0 * plane.XAxis, plane.Origin + r1 * plane.XAxis);
+            Line l1 = new Line(plane.Origin - r0 * plane.XAxis, plane.Origin - r1 * plane.XAxis);
+
+            Point3d[] p0;
+            Point3d[] p1;
+
+            l0.ToNurbsCurve().DivideByCount(turns, true, out p0);
+            l1.ToNurbsCurve().DivideByCount(turns, true, out p1);
+
+            PolyCurve spiral = new PolyCurve();
+
+            for (int i = 0; i < p0.Length - 1; i++)
+            {
+                Arc arc0 = new Arc(p0[i], plane.YAxis, p1[i + 1]);
+                Arc arc1 = new Arc(p1[i + 1], -plane.YAxis, p0[i + 1]);
+
+                spiral.Append(arc0);
+                spiral.Append(arc1);
+            }
+
+            return spiral;
+        }
+
+        /// <summary>
+        /// The Exposure property controls where in the panel a component icon 
+        /// will appear. There are seven possible locations (primary to septenary), 
+        /// each of which can be combined with the GH_Exposure.obscure flag, which 
+        /// ensures the component will only be visible on panel dropdowns.
+        /// </summary>
+        public override GH_Exposure Exposure => GH_Exposure.primary;
+
+        /// <summary>
+        /// Provides an Icon for every component that will be visible in the User Interface.
+        /// Icons need to be 24x24 pixels.
+        /// You can add image files to your project resources and access them like this:
+        /// return Resources.IconForThisComponent;
+        /// </summary>
+        protected override System.Drawing.Bitmap Icon => null;
+
+        /// <summary>
+        /// Each component must have a unique Guid to identify it. 
+        /// It is vital this Guid doesn't change otherwise old ghx files 
+        /// that use the old ID will partially fail during loading.
+        /// </summary>
+        public override Guid ComponentGuid => new Guid("5c7e40c2-cc64-4563-9cfa-254a3b59e3d6");
+    }
+}        
+        """
+        with code_container:
+            st.code(code, language='c#',wrap_lines=True)
+
+
+st.divider()
+st.write("### step 4 Drawing Generation")
+btn_drawing_generation=st.button("Drawing Generation",use_container_width=True)
+pythoncom.CoInitialize()
+
+if btn_drawing_generation:
+    app=adfun.mycadfun.getAutocadApp()
+    doc=adfun.mycadfun.getActiveDocument(app)
+    modelSpace=adfun.mycadfun.getModelSpace(doc)
+
+    # Create hexagon with side length 2500
+    hex_side = 2500
+    hex_pts = [
+        array.array('d', [0, 0, 0]),
+        array.array('d', [hex_side, 0, 0]),
+        array.array('d', [1.5*hex_side, -hex_side*math.sqrt(3)/2, 0]),
+        array.array('d', [hex_side, -hex_side*math.sqrt(3), 0]),
+        array.array('d', [0, -hex_side*math.sqrt(3), 0]),
+        array.array('d', [-0.5*hex_side, -hex_side*math.sqrt(3)/2, 0])
+    ]
+    
+    # Draw hexagon lines
+    for i in range(len(hex_pts)):
+        start = hex_pts[i]
+        end = hex_pts[(i+1)%len(hex_pts)]
+        modelSpace.AddLine(start, end)
+        dimension1= adfun.mycadfun.dimensionPtPt(modelSpace,start,end,array.array('d',[(start[0]+end[0])/2,(start[1]+end[1])/2+220,(start[2]+end[2])/2]))   
+
+    adfun.mycadfun.dimension3PointAngular(modelSpace,hex_pts[3], hex_pts[2], hex_pts[4],
+                                          array.array('d', [hex_pts[3][0]+200, hex_pts[3][1]+600, 0]), 100)
+    tri_side = 2500
+    tri_start = array.array('d', [0, -9000 , 0])
+    tri_pts = [
+        tri_start,
+        array.array('d', [tri_side, -9000, 0]),
+        array.array('d', [tri_side/2, -9000 + tri_side*math.sqrt(3)/2, 0])
+    ]
+    
+    # Draw triangle lines
+    for i in range(len(tri_pts)):
+        start = tri_pts[i]
+        end = tri_pts[(i+1)%len(tri_pts)]
+        modelSpace.AddLine(start, end)
+        dimension1= adfun.mycadfun.dimensionPtPt(modelSpace,start,end,array.array('d',[(start[0]+end[0])/2,(start[1]+end[1])/2+220,(start[2]+end[2])/2]))   
+    
+
+     
+
+
+    adfun.mycadfun.dimension3PointAngular(modelSpace,tri_pts[0], tri_pts[1], tri_pts[2],
+                                          array.array('d', [tri_pts[0][0]+200, tri_pts[0][1]+200, 0]), 100)
+    doc.Regen(True)
+
+drawing_generation_expander=st.expander("Drawing Generation expander")
+with drawing_generation_expander:
+    video_path=r"image/deom2/demo2_drawing_generation.mp4"
+    v=st.video(video_path,format="video/mp4")
+
+    # st.components.v1.html(f'<div style="height: 300px; overflow: hidden;">{st.video(video_path)}</div>', height=300)
+    # st.components.v1.html(f'<div style="height: 200px; overflow: hidden;">{st.video(video_path)}</div>', height=200)  # Updated height
 
 
 
