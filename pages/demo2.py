@@ -40,7 +40,7 @@ with col1:
 with col2:
     step2_code_expander=st.expander("Step 2 panel automation python code")
     with step2_code_expander:        
-        code="""
+        code=r"""
 import rhinoscriptsyntax as rs
 from rhfun import myfun as rhfun
 import math
@@ -74,20 +74,6 @@ surf1_layer_objects = rs.ObjectsByLayer("surf1")
 crv1=[obj for obj in surf1_layer_objects if rs.IsCurve(obj)][0]
 surf1=[obj for obj in surf1_layer_objects if rs.IsSurface(obj)][0]
 
-
-def export_to_iges(fullpath):
-    # rs.Command("-_Export",True)
-    rs.UnselectAllObjects()
-    rs.SelectObjects(rs.AllObjects())
-
-    
-    fileFullPath = " \""+fullpath+"\""
-    # command = +fileFullPath+" Enter"
-    command = "-_Export "+fileFullPath+" Enter"
-    
-    # Execute the export command
-    rs.Command(command, True)
-    
 
 def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer):
     for i in range(0,50):
@@ -172,18 +158,24 @@ def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer):
                                 rs.DeleteObjects(normal_line2)
                             
 
+create_panel_and_glass1(crv1,surf1,glass1_layer,panel1_layer)
+
 surf2_layer_objects = rs.ObjectsByLayer("surf2")
 crv2=[obj for obj in surf2_layer_objects if rs.IsCurve(obj)][0]
 surf2=[obj for obj in surf2_layer_objects if rs.IsSurface(obj)][0]
 
 rs.CurrentLayer(result2_layer)
 
-export_to_iges(r"C:\Andy\Andy_Collection\AndyZMQ_Personal\2025_Automation\Master_Challenge\demo2_panel.igs")
+create_panel_and_glass1(crv2,surf2,glass2_layer,panel2_layer)
+
+
+rs.CurrentLayer("templayer")
+
+rs.LayerVisible("result1",False)
+rs.LayerVisible("result2",False)
 
 
 print("finished")
-
-
 
 
         """

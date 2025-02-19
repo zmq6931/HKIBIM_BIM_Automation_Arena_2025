@@ -32,20 +32,6 @@ crv1=[obj for obj in surf1_layer_objects if rs.IsCurve(obj)][0]
 surf1=[obj for obj in surf1_layer_objects if rs.IsSurface(obj)][0]
 
 
-def export_to_iges(fullpath):
-    # rs.Command("-_Export",True)
-    rs.UnselectAllObjects()
-    rs.SelectObjects(rs.AllObjects())
-
-    
-    fileFullPath = " \""+fullpath+"\""
-    # command = +fileFullPath+" Enter"
-    command = "-_Export "+fileFullPath+" Enter"
-    
-    # Execute the export command
-    rs.Command(command, True)
-    
-
 def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer):
     for i in range(0,50):
         offset_crv1 = rs.OffsetCurveOnSurface(offset_crv, surf, -i*v_distance)
@@ -78,6 +64,8 @@ def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer):
                                 hexagon=rhfun.hexagon.create_hexagonal_edge_6_by_center_pt(plane,ptlist[pt_index],ptlist[pt_index-1],h_distance)
                                 surface=rs.AddPlanarSrf(hexagon)
                                 rs.ObjectLayer(surface,glass_layer)
+                                rs.ObjectName(surface,"glass")
+                                print(rs.ObjectName(surface))
                                 if n==0:
                                     triangle_workplane=rhfun.plane.create_surface_normal_plane_by_pt(surface,ptlist[0],False)
                                     rs.ViewCPlane(None, triangle_workplane) 
@@ -129,7 +117,7 @@ def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer):
                                 rs.DeleteObjects(normal_line2)
                             
 
-# create_panel_and_glass1(crv1,surf1,glass1_layer,panel1_layer)
+create_panel_and_glass1(crv1,surf1,glass1_layer,panel1_layer)
 
 surf2_layer_objects = rs.ObjectsByLayer("surf2")
 crv2=[obj for obj in surf2_layer_objects if rs.IsCurve(obj)][0]
@@ -137,9 +125,13 @@ surf2=[obj for obj in surf2_layer_objects if rs.IsSurface(obj)][0]
 
 rs.CurrentLayer(result2_layer)
 
-# create_panel_and_glass1(crv2,surf2,glass2_layer,panel2_layer)
+create_panel_and_glass1(crv2,surf2,glass2_layer,panel2_layer)
 
-export_to_iges(r"C:\Andy\Andy_Collection\AndyZMQ_Personal\2025_Automation\Master_Challenge\demo2_panel.igs")
+
+rs.CurrentLayer("templayer")
+
+rs.LayerVisible("result1",False)
+rs.LayerVisible("result2",False)
 
 
 print("finished")

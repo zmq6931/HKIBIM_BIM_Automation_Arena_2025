@@ -10,7 +10,8 @@ with col1:
 with col2:
     st.image(r"image/Master Challenge Question/pic2.png")
     st.image(r"image/Master Challenge Question/pic5.png")
+    st.image(r"image/Master Challenge Question/pic8.png")
 with col3:
     st.image(r"image/Master Challenge Question/pic3.png")
     st.image(r"image/Master Challenge Question/pic6.png")
-
+    st.image(r"image/Master Challenge Question/pic9.png")
