@@ -437,12 +437,50 @@ with Greenery_expander:
 #endregion
 
 
+#region 12. Building design & 3D modelling workflow
+st.write("### 12. Building design & 3D modelling work")
+building_design_expander=st.expander("Building design & 3D modelling work expander")
+with building_design_expander:
+    col1,col2,col3=st.columns([1.7,1.7,4])
+    with col3:
+        st.image(r"image/modelling/pic1.png",use_container_width=True)
+    with col2:
+        st.write("Solution1")
+        st.image(r"image/modelling/modelling_solution1.png")
+        st.write("Solution2")
+        st.image(r"image/modelling/modelling_solution2.png")
+        st.write("Solution3")
+        st.image(r"image/modelling/modelling_solution3.png")
+    with col1:
+        st.write("wireframe")
+        st.image(r"image/modelling/pic2.png",use_container_width=True)
+    pass
+
+
+
+#endregion
+
+#region 13. Sensor Layout
+st.write("### 13. Sensor Layout")
+sensor_layout_expander=st.expander("Sensor Layout Expander")
+with sensor_layout_expander:
+    col1,col2=st.columns([1,1])
+    with col1:
+        st.image(r"image/modelling/sensor1.png",use_container_width=True)
+    with col2:
+        st.image(r"image/modelling/sensor2.png",use_container_width=True)
+#endregion
+
+
+
+
 #region Result
-st.write("### Result")
-result_expander=st.expander("Result_Expander")
-with result_expander:
-    st.write("### Result")
-    url="https://app.speckle.systems/projects/c3c82e786c/models/9ef4cc230f"
+st.write("### Result 3D ")
+result_expander_demo1_solution1=st.expander("demo1_solution1")
+with result_expander_demo1_solution1:
+    st.write("### demo1_solution1")
+    st.image(r"image/qrcode/qr_code_demo1_solution1.png",width=200)
+    url="https://app.speckle.systems/projects/c3c82e786c/models/79ad515017"
     embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
 
     components.html(
@@ -452,8 +490,34 @@ with result_expander:
     height=600  # Set the height explicitly for the component
     )
     
+result_expander_demo1_solution2=st.expander("demo1_solution2")
+with result_expander_demo1_solution2:
+    st.write("### demo1_solution2")
+    st.image(r"image/qrcode/qr_code_demo1_solution2.png",width=200)
+    url="https://app.speckle.systems/projects/c3c82e786c/models/8fb758d28d"
+    embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
     
-
+    components.html(
+        f"""
+    <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
+        """, 
+    height=600  # Set the height explicitly for the component
+    )
+    
+result_expander_demo1_solution3=st.expander("demo1_solution3")
+with result_expander_demo1_solution3:
+    st.write("### demo1_solution3")
+    st.image(r"image/qrcode/qr_code_demo1_solution3.png",width=200)
+    url="https://app.speckle.systems/projects/c3c82e786c/models/9a3f990368"
+    embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
+    
+    components.html(
+        f"""
+    <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
+        """, 
+    height=600  # Set the height explicitly for the component
+    )
+    
 
 
 print("finished")

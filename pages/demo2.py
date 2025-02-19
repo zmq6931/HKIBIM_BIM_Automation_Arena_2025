@@ -8,7 +8,7 @@ except:
 import array
 import math
 from streamlit.components.v1 import iframe
-
+import streamlit.components.v1 as components
 
 st.title("HKIBIM_BIM_Automation_Arena_2025 - Andy")
 st.subheader("Master Challenge Demo2")
@@ -469,11 +469,116 @@ if btn_drawing_generation:
 
 drawing_generation_expander=st.expander("Drawing Generation expander")
 with drawing_generation_expander:
-    video_path=r"image/deom2/demo2_drawing_generation.mp4"
-    v=st.video(video_path,format="video/mp4")
+    col1,col2=st.columns([2,1])
+    with col1:
+        video_path=r"image/deom2/demo2_drawing_generation.mp4"
+        v=st.video(video_path,format="video/mp4")
+    with col2:
+        code_container=st.container(height=400,border=False)
+        with code_container:
+            code=r"""
+        app=adfun.mycadfun.getAutocadApp()
+        doc=adfun.mycadfun.getActiveDocument(app)
+        modelSpace=adfun.mycadfun.getModelSpace(doc)
+
+        # Create hexagon with side length 2500
+        hex_side = 2500
+        hex_pts = [
+            array.array('d', [0, 0, 0]),
+            array.array('d', [hex_side, 0, 0]),
+            array.array('d', [1.5*hex_side, -hex_side*math.sqrt(3)/2, 0]),
+            array.array('d', [hex_side, -hex_side*math.sqrt(3), 0]),
+            array.array('d', [0, -hex_side*math.sqrt(3), 0]),
+            array.array('d', [-0.5*hex_side, -hex_side*math.sqrt(3)/2, 0])
+        ]
+        
+        # Draw hexagon lines
+        for i in range(len(hex_pts)):
+            start = hex_pts[i]
+            end = hex_pts[(i+1)%len(hex_pts)]
+            modelSpace.AddLine(start, end)
+            dimension1= adfun.mycadfun.dimensionPtPt(modelSpace,start,end,array.array('d',[(start[0]+end[0])/2,(start[1]+end[1])/2+220,(start[2]+end[2])/2]))   
+
+        adfun.mycadfun.dimension3PointAngular(modelSpace,hex_pts[3], hex_pts[2], hex_pts[4],
+                                            array.array('d', [hex_pts[3][0]+200, hex_pts[3][1]+600, 0]), 100)
+        tri_side = 2500
+        tri_start = array.array('d', [0, -9000 , 0])
+        tri_pts = [
+            tri_start,
+            array.array('d', [tri_side, -9000, 0]),
+            array.array('d', [tri_side/2, -9000 + tri_side*math.sqrt(3)/2, 0])
+        ]
+        
+        # Draw triangle lines
+        for i in range(len(tri_pts)):
+            start = tri_pts[i]
+            end = tri_pts[(i+1)%len(tri_pts)]
+            modelSpace.AddLine(start, end)
+            dimension1= adfun.mycadfun.dimensionPtPt(modelSpace,start,end,array.array('d',[(start[0]+end[0])/2,(start[1]+end[1])/2+220,(start[2]+end[2])/2]))   
+        
+
+        
+
+
+        adfun.mycadfun.dimension3PointAngular(modelSpace,tri_pts[0], tri_pts[1], tri_pts[2],
+                                            array.array('d', [tri_pts[0][0]+200, tri_pts[0][1]+200, 0]), 100)
+        doc.Regen(True)
+            
+            """
+            st.code(code, language='python',wrap_lines=True)
 
     # st.components.v1.html(f'<div style="height: 300px; overflow: hidden;">{st.video(video_path)}</div>', height=300)
     # st.components.v1.html(f'<div style="height: 200px; overflow: hidden;">{st.video(video_path)}</div>', height=200)  # Updated height
+
+
+st.divider()
+st.write("### step 5 Lighting and Greenery refer to demo1")
+
+st.divider()
+st.write("### Result 3D ")
+result_expander_demo2_solution1=st.expander("demo2_solution1")
+with result_expander_demo2_solution1:
+    st.write("### demo2_solution1")
+    st.image(r"image/qrcode/qr_code_demo2_solution1.png",width=200)
+    url="https://app.speckle.systems/projects/c3c82e786c/models/13ea69d790"
+    embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
+
+    components.html(
+        f"""
+    <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
+        """, 
+    height=600  # Set the height explicitly for the component
+    )
+    
+result_expander_demo2_solution2=st.expander("demo2_solution2")
+with result_expander_demo2_solution2:
+    st.write("### demo2_solution2")
+    st.image(r"image/qrcode/qr_code_demo2_solution2.png",width=200)
+    url="https://app.speckle.systems/projects/c3c82e786c/models/30f0dd317a"
+    embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
+    
+    components.html(
+        f"""
+    <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
+        """, 
+    height=600  # Set the height explicitly for the component
+    )
+    
+result_expander_demo2_solution3=st.expander("demo2_solution3")
+with result_expander_demo2_solution3:
+    st.write("### demo2_solution3")
+    st.image(r"image/qrcode/qr_code_demo2_solution3.png",width=200)
+    url="https://app.speckle.systems/projects/c3c82e786c/models/90eb482cbb"
+    embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
+    
+    components.html(
+        f"""
+    <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
+        """, 
+    height=600  # Set the height explicitly for the component
+    )
+    
+
 
 
 
