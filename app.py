@@ -9,7 +9,7 @@ st.set_page_config(
                     # page_icon=icon,
                     layout="wide",
                     initial_sidebar_state="expanded",
-                    page_icon=r"pics/logo/GT.png"
+                    page_icon=r"image/others/Andy1.png"
                    )
 
 # st.title("HKIBIM_BIM_Automation_Arena_2025 - Master Challenge")
