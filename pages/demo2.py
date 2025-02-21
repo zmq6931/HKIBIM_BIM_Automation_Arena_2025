@@ -532,7 +532,7 @@ with drawing_generation_expander:
 
 
 st.divider()
-st.write("### step 5 Lighting and Greenery refer to demo1")
+st.write("### step 5 Lighting and Greenery and 3D modelling work refer to demo1")
 
 st.divider()
 st.write("### Result 3D ")

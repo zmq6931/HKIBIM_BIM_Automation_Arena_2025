@@ -20,6 +20,7 @@ pages={
         st.Page(r"pages/demo1.py", title="🌟- Demo1"),
         st.Page(r"pages/demo2.py", title="🌟- Demo2"),
         st.Page(r"pages/demo3.py", title="🌟- Demo3"),
+        st.Page(r"pages/summary.py", title="🌟- Summary"),
                              ],      
 }
 
