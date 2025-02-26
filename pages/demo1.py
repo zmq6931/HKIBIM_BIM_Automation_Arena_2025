@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.express as px
 import math
 import array
-import os
+import os,sys
 import streamlit.components.v1 as components
 
 try:
@@ -69,9 +69,13 @@ parameters=part.Parameters
 panel_W=parameters["panel_W"]
 panel_L=parameters["panel_L"]
 pt_Distance=parameters["pt_Distance"]
+width=parameters["Width"]
+length=parameters["Length"]
+height=parameters["Height"]
 resultGeo=part.HybridBodies.item("ResultGeo")
 curveGeo=part.HybridBodies.item("curves")
 
+dp.DisplayFileAlerts=False
     
 # print(width.Value, length.Value, height.Value)
 st.write("current doc name is -> ", doc.name)
@@ -90,14 +94,39 @@ with col2:
 with col3:
     input_pt_Distance = st.number_input("pt_Distance",min_value=200,value=1200,step=50)
     
-
+col1,col2,col3=st.columns(3)
+with col1:
+    input_Width = st.number_input("Width",min_value=40000,value=47000,step=100)
+with col2:
+    input_Length = st.number_input("Length", min_value=60000,value=69800,step=100)
+with col3:
+    input_Height = st.number_input("Height",min_value=13000,value=18000,step=50)
+    
 btn_change_parameter=st.button("Change Parameter",use_container_width=True)
 if btn_change_parameter:
     st.write("panel_W: ",input_panel_W,"panel_L: ",input_panel_L,"pt_Distance: ",input_pt_Distance)
+    st.write("Width: ",input_Width,"Length: ",input_Length,"Height: ",input_Height)
     panel_W.Value=input_panel_W
     panel_L.Value=input_panel_L
     pt_Distance.Value=input_pt_Distance
+    width.Value=input_Width
+    length.Value=input_Length
+    height.Value=input_Height
     
+    part.Update()
+
+btn_saveas_iges=st.button("Save as IGES",use_container_width=True)
+if btn_saveas_iges:
+    st.write("Saving as IGES...")
+    export_path=r"C:\Andy\Andy_Collection\AndyZMQ_Personal\2025_Automation\Master_Challenge\temp_surfaces.igs"
+    name=export_path.split('.')[0]
+    format=export_path.split('.')[1]
+    doc.ExportData(name,format)
+
+    
+    
+
+        
 
 #endregion
 
@@ -250,6 +279,9 @@ with Generate_Transoms_expander:
 #endregion
 
 #region 8. Extract Information
+
+
+
 st.write("### 8. Extract Information")
 btn_extract_information=st.button("Extract Information",use_container_width=True)
 if btn_extract_information:
@@ -309,6 +341,7 @@ if btn_extract_information:
     
     fig2=px.line(dfTransoms,x="name",y="length",title="Transoms Length")
     st.plotly_chart(fig2,use_container_width=True)
+    dfTransoms.to_csv("pages/transoms.csv",index=False)
 Extract_Information_expander=st.expander("Extract_Information_expander")
 with Extract_Information_expander:
     st.video(r"image/demo1_extract_information/extract_information.mp4",format="video/mp4",autoplay=True,loop=True)
@@ -476,47 +509,49 @@ with sensor_layout_expander:
 
 #region Result
 st.write("### Result 3D ")
-result_expander_demo1_solution1=st.expander("demo1_solution1")
-with result_expander_demo1_solution1:
-    st.write("### demo1_solution1")
-    st.image(r"image/qrcode/qr_code_demo1_solution1.png",width=200)
-    url="https://app.speckle.systems/projects/c3c82e786c/models/79ad515017"
-    embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
+col1,col2,col3=st.columns([1,1,1])
+with col1:
+    result_expander_demo1_solution1=st.expander("demo1_solution1")
+    with result_expander_demo1_solution1:
+        st.write("### demo1_solution1")
+        st.image(r"image/qrcode/qr_code_demo1_solution1.png",width=150)
+        url="https://app.speckle.systems/projects/c3c82e786c/models/79ad515017"
+        embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
 
-    components.html(
+        components.html(
+            f"""
+        <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
+            """, 
+        height=600  # Set the height explicitly for the component
+        )
+with col2:
+    result_expander_demo1_solution2=st.expander("demo1_solution2")
+    with result_expander_demo1_solution2:
+        st.write("### demo1_solution2")
+        st.image(r"image/qrcode/qr_code_demo1_solution2.png",width=150)
+        url="https://app.speckle.systems/projects/c3c82e786c/models/8fb758d28d"
+        embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
+    
+        components.html(
         f"""
     <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
         """, 
     height=600  # Set the height explicitly for the component
     )
-    
-result_expander_demo1_solution2=st.expander("demo1_solution2")
-with result_expander_demo1_solution2:
-    st.write("### demo1_solution2")
-    st.image(r"image/qrcode/qr_code_demo1_solution2.png",width=200)
-    url="https://app.speckle.systems/projects/c3c82e786c/models/8fb758d28d"
-    embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
-    
-    components.html(
-        f"""
-    <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
-        """, 
-    height=600  # Set the height explicitly for the component
-    )
-    
-result_expander_demo1_solution3=st.expander("demo1_solution3")
-with result_expander_demo1_solution3:
-    st.write("### demo1_solution3")
-    st.image(r"image/qrcode/qr_code_demo1_solution3.png",width=200)
-    url="https://app.speckle.systems/projects/c3c82e786c/models/9a3f990368"
-    embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
-    
-    components.html(
-        f"""
-    <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
-        """, 
-    height=600  # Set the height explicitly for the component
-    )
+with col3:
+    result_expander_demo1_solution3=st.expander("demo1_solution3")
+    with result_expander_demo1_solution3:
+        st.write("### demo1_solution3")
+        st.image(r"image/qrcode/qr_code_demo1_solution3.png",width=150)
+        url="https://app.speckle.systems/projects/c3c82e786c/models/9a3f990368"
+        embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"
+        
+        components.html(
+            f"""
+        <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
+            """, 
+        height=600  # Set the height explicitly for the component
+        )
     
 
 

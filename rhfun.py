@@ -131,7 +131,6 @@ class myfun(object):
             return rs.PointCoordinates(pt)
         @staticmethod
         def equalDistancePointOnCurve(curve,distance,reserveBool=False,returnPoints=True):
-            """点距离相等"""
             if reserveBool:
                 rs.ReverseCurve(curve)
             temp=[]
@@ -147,7 +146,6 @@ class myfun(object):
             return temp
         @staticmethod
         def sameDistancePointOnCurve(curve,distance,reserveBool=False):
-            """点距离相等"""
             if reserveBool:
                 rs.ReverseCurve(curve)
             temp=[]
@@ -163,7 +161,6 @@ class myfun(object):
             return temp
         @staticmethod
         def sameDistancePointIdOnCurve(curve,distance,reserveBool=False):
-            """点距离相等"""
             if reserveBool:
                 rs.ReverseCurve(curve)
             temp=[]

@@ -87,7 +87,9 @@ st.write("### AI Chat")
 
 import os
 from openai import OpenAI
+import pandas as pd
 
+dfTransoms=pd.read_csv("pages/transoms.csv")
 client = OpenAI(
     api_key=st.secrets["grok_ad_test_001_apikey"], 
     base_url=st.secrets["grok_api_url"],
@@ -109,16 +111,19 @@ with ai_container:
         with st.chat_message("user"):
             st.markdown(prompt)
 
+
         # Generate a response using the OpenAI API.
         completion = client.chat.completions.create(
             model="grok-2-latest",
             messages=[
-                # {"role": "system", "content": "You are a PhD-level mathematician."},
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
+                {"role": "system", "content": f"You are a PhD-level mathematician. your data is {dfTransoms}"},
+                *({"role": m["role"], "content": m["content"]} for m in st.session_state.messages)
             ],
             stream=True
         )
+
+
+        
         response = st.write_stream(completion)
         st.session_state.messages.append({"role": "assistant", "content": response})
 

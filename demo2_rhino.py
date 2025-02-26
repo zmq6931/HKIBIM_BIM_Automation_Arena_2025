@@ -2,6 +2,43 @@ import rhinoscriptsyntax as rs
 from rhfun import myfun as rhfun
 import math
 
+
+path=r'C:\Andy\Andy_Collection\AndyZMQ_Personal\2025_Automation\Master_Challenge\temp_surfaces.igs'
+command='-Import {} _Enter _Enter'.format(path)
+
+objs=rhfun.get.get_all_objects_under_layer("IGES level 10000")
+rs.DeleteObjects(objs)
+
+rs.Command(command)
+objs=rhfun.get.get_all_objects_under_layer("IGES level 10000")
+
+surf1=[x for x in objs if rs.IsSurface(x)][0]
+surf2=[x for x in objs if rs.IsSurface(x)][1]
+
+crv1=[x for x in objs if rs.IsCurve(x)][0]
+crv2=[x for x in objs if rs.IsCurve(x)][1]
+
+if rs.Area(surf1)>rs.Area(surf2):
+    surf1,surf2=surf2,surf1
+else:
+    surf2,surf1=surf1,surf2
+
+
+
+crv1_start = rs.CurveStartPoint(crv1)
+crv1_end = rs.CurveEndPoint(crv1)
+
+isOnSurf= rs.IsPointOnSurface(surf1,crv1_start)
+if  isOnSurf:
+    crv1,crv2=crv1,crv2
+else:
+    crv1,crv2=crv2,crv1
+print(isOnSurf)
+
+rs.ReverseCurve(crv1)
+rs.ReverseCurve(crv2)
+
+
 h_distance=2500
 thickness=100
 v_distance=h_distance*(math.sqrt(3)/2)
@@ -27,13 +64,13 @@ rs.DeleteObjects(objs)
 objs=rs.ObjectsByLayer(panel2_layer)
 rs.DeleteObjects(objs)
 
-surf1_layer_objects = rs.ObjectsByLayer("surf1")
-crv1=[obj for obj in surf1_layer_objects if rs.IsCurve(obj)][0]
-surf1=[obj for obj in surf1_layer_objects if rs.IsSurface(obj)][0]
+# surf1_layer_objects = rs.ObjectsByLayer("surf1")
+# crv1=[obj for obj in surf1_layer_objects if rs.IsCurve(obj)][0]
+# surf1=[obj for obj in surf1_layer_objects if rs.IsSurface(obj)][0]
 
 
-def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer):
-    for i in range(0,50):
+def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer,iterate_number=5,multi_index_0_or_1=0):
+    for i in range(0,iterate_number):
         offset_crv1 = rs.OffsetCurveOnSurface(offset_crv, surf, -i*v_distance)
         
         if i==0:
@@ -41,9 +78,17 @@ def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer):
         else:
             if isinstance(offset_crv1,list):
                 try:
-                    offset_crv1=offset_crv1[1]
+                    if multi_index_0_or_1==0:
+                        offset_crv1=offset_crv1[0]
+                    else:
+                        offset_crv1=offset_crv1[1]
                 except:
                     offset_crv1=offset_crv1[0]
+                    
+                    # if multi_index_0_or_1==0:
+                    #     offset_crv1=offset_crv1[1]
+                    # else:
+                    #     offset_crv1=offset_crv1[0]
             else:
                 offset_crv1=offset_crv1
         if offset_crv1 != None:
@@ -117,21 +162,23 @@ def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer):
                                 rs.DeleteObjects(normal_line2)
                             
 
-create_panel_and_glass1(crv1,surf1,glass1_layer,panel1_layer)
+create_panel_and_glass1(crv1,surf1,glass1_layer,panel1_layer,iterate_number=10,multi_index_0_or_1=0)
 
-surf2_layer_objects = rs.ObjectsByLayer("surf2")
-crv2=[obj for obj in surf2_layer_objects if rs.IsCurve(obj)][0]
-surf2=[obj for obj in surf2_layer_objects if rs.IsSurface(obj)][0]
+# surf2_layer_objects = rs.ObjectsByLayer("surf2")
+# crv2=[obj for obj in surf2_layer_objects if rs.IsCurve(obj)][0]
+# surf2=[obj for obj in surf2_layer_objects if rs.IsSurface(obj)][0]
 
 rs.CurrentLayer(result2_layer)
 
-create_panel_and_glass1(crv2,surf2,glass2_layer,panel2_layer)
+create_panel_and_glass1(crv2,surf2,glass2_layer,panel2_layer,iterate_number=20,multi_index_0_or_1=0)
 
 
 rs.CurrentLayer("templayer")
 
 rs.LayerVisible("result1",False)
 rs.LayerVisible("result2",False)
+
+
 
 
 print("finished")
