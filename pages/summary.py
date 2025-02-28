@@ -32,7 +32,7 @@ with col2:
         - rhinoscriptsyntax
         - matlabengine==24.2.2
         - pandas
-    - C#
+        - C#
         - Tekla.Structures
         - Tekla.Structures.Model
         - Grasshopper
@@ -69,15 +69,21 @@ with col2:
     )
 
 st.divider()
-st.markdown("""
-### - BIM is not a single software, it's a collaborative process that requires multiple software tools from project start to finish, leveraging the strengths of each software, forming a complete workflow or solution from the design phase through to completion and even operation and maintenance.
-### - BIM is a process that continuously evolves, iterates, and optimizes with the development of software, hardware, and the experience of project team members.
-### - BIM is also big data. BIMer need to handle massive amounts of model data, information data, etc., which also means automation is inevitable.
-### - BIM needs to meet certain standards because high standardization leads to high automation, but more importantly, breakthroughs and innovation are the soul of BIM.
+# st.markdown("""
+# ### - BIM is not a single software, it's a collaborative process that requires multiple software tools from project start to finish, leveraging the strengths of each software, forming a complete workflow or solution from the design phase through to completion and even operation and maintenance.
+# ### - BIM is a process that continuously evolves, iterates, and optimizes with the development of software, hardware, and the experience of project team members.
+# ### - BIM is also big data. BIMer need to handle massive amounts of model data, information data, etc., which also means automation is inevitable.
+# ### - BIM needs to meet certain standards because high standardization leads to high automation, but more importantly, breakthroughs and innovation are the soul of BIM.
 
+# # What is the most important -> BIMer
+# """)
+st.write(
+    """
+### Standards? Just the foundation—critical, yes, but basic. Automation is the unstoppable core of BIM (Building Information Modeling), powering efficiency and precision, obliterating tedious tasks, and supercharging workflows. Breakthroughs and innovation? They’re the blazing soul of BIM, shattering limits, igniting bold creativity, and unleashing game-changing possibilities. But make no mistake—the BIMer is the ultimate force here. They don’t just use these tools, they command them, fusing structure, efficiency, and genius into a revolution. BIM isn’t just a process—it’s a powerhouse, and the fearless BIMer drives its true, world-shaping potential.
+    
 # What is the most important -> BIMer
-""")
-
+    """
+)
 
 st.divider()
 st.write("### AI Chat")
