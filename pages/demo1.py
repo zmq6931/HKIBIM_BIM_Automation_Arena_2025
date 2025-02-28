@@ -231,10 +231,10 @@ with Generate_Panels_expander:
 #endregion
 
 #region 7. Generate Transoms
-st.write("### 7. Generate Transoms")
+st.write("### 7. Generate Steel frames")
 transom_pt1_distance=1000
 
-btn_generate_transoms=st.button("Generate Transoms",use_container_width=True)
+btn_generate_transoms=st.button("Generate Steel frames",use_container_width=True)
 if btn_generate_transoms:
     transomsGeo=None
     try:
@@ -273,7 +273,7 @@ if btn_generate_transoms:
                 # subgeo.AppendHybridShape(sweepCircle)
         part.Update() 
         # break   
-Generate_Transoms_expander=st.expander("Generate_Transoms_expander")
+Generate_Transoms_expander=st.expander("Generate_SteelFrames_expander")
 with Generate_Transoms_expander:
     st.video(r"image/demo1_step7/transomGenerate_2.mp4",format="video/mp4",autoplay=True,loop=True)
 #endregion

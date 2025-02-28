@@ -188,8 +188,8 @@ print("finished")
 
 st.divider()
 
-st.write("### Step 3 transom automation")
-step3_transom_expander=st.expander("Step 3 transom automation")
+st.write("### Step 3 steel frames automation")
+step3_transom_expander=st.expander("Step 3 steel frames automation")
 with step3_transom_expander:
     st.video(r"image/deom2/rhino_tekla_transom.mp4",format="video/mp4")
 
