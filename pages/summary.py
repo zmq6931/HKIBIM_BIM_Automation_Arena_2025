@@ -32,7 +32,7 @@ with col2:
         - rhinoscriptsyntax
         - matlabengine==24.2.2
         - pandas
-        - C#
+    - C#
         - Tekla.Structures
         - Tekla.Structures.Model
         - Grasshopper
@@ -122,7 +122,7 @@ with ai_container:
         completion = client.chat.completions.create(
             model="grok-2-latest",
             messages=[
-                {"role": "system", "content": f"You are a PhD-level mathematician. your data is {dfTransoms}"},
+                {"role": "system", "content": f"You are a professional BIMer. your data is {dfTransoms}"}, #PhD-level mathematician
                 *({"role": m["role"], "content": m["content"]} for m in st.session_state.messages)
             ],
             stream=True

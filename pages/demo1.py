@@ -470,9 +470,9 @@ with Greenery_expander:
 #endregion
 
 
-#region 12. Building design & 3D modelling workflow
-st.write("### 12. Building design & 3D modelling work")
-building_design_expander=st.expander("Building design & 3D modelling work expander")
+#region 12. Hall of Fame modelling work
+st.write("### 12. Hall of Fame modelling work")
+building_design_expander=st.expander("Hall of Fame modelling work expander")
 with building_design_expander:
     col1,col2,col3=st.columns([1.7,1.7,4])
     with col3:

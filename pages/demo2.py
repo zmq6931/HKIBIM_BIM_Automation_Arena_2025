@@ -16,6 +16,7 @@ st.subheader("Master Challenge Demo2")
 st.divider()
 st.write("### Why Demo2 and step 1 sell generation")
 why_demo2_expander=st.expander("Why Demo2 and step 1 sell generation")
+
 with why_demo2_expander:
     st.write("### Why Demo2")
 
@@ -28,7 +29,48 @@ with why_demo2_expander:
         st.image(r"image/deom2/demo2.png")
     with col3:
         st.image(r"image/deom2/shape2.png")
+    col1,col2,col3=st.columns(3)
+    with col1:
+        input_Width = st.number_input("Width",min_value=40000,value=47000,step=100)
+    with col2:
+        input_Length = st.number_input("Length", min_value=60000,value=69800,step=100)
+    with col3:
+        input_Height = st.number_input("Height",min_value=13000,value=18000,step=50)
+    btn_change_parameter=st.button("Change Parameter",use_container_width=True)
+    pythoncom.CoInitialize()
 
+    if btn_change_parameter:
+        dp=adfun.mydpfun.getDpApplication()
+        doc=dp.ActiveDocument
+        osel=doc.Selection
+        part=doc.Part
+        hsf=part.HybridShapeFactory
+        parameters=part.Parameters
+        width=parameters["Width"]
+        length=parameters["Length"]
+        height=parameters["Height"]
+        resultGeo=part.HybridBodies.item("ResultGeo")
+        curveGeo=part.HybridBodies.item("curves")
+
+        dp.DisplayFileAlerts=False
+        st.write("Width: ",input_Width,"Length: ",input_Length,"Height: ",input_Height)
+
+        width.Value=input_Width
+        length.Value=input_Length
+        height.Value=input_Height
+        
+        part.Update()
+    btn_saveas_iges=st.button("Save as IGES",use_container_width=True)
+    if btn_saveas_iges:
+        dp=adfun.mydpfun.getDpApplication()
+        doc=dp.ActiveDocument
+        st.write("Saving as IGES...")
+        export_path=r"C:\Andy\Andy_Collection\AndyZMQ_Personal\2025_Automation\Master_Challenge\temp_surfaces.igs"
+        name=export_path.split('.')[0]
+        format=export_path.split('.')[1]
+        doc.ExportData(name,format)
+
+   
 st.divider()
 st.write("### Step 2 panel automation")
 col1,col2=st.columns([0.8,1.1])
