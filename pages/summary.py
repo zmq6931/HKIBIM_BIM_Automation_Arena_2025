@@ -122,7 +122,7 @@ with ai_container:
         completion = client.chat.completions.create(
             model="grok-2-latest",
             messages=[
-                {"role": "system", "content": f"You are a professional BIMer. your data is {dfTransoms}"}, #PhD-level mathematician
+                {"role": "system", "content": f"You are a professional BIMer. your data is {dfTransoms}"}, #BIMer and PhD-level mathematician
                 *({"role": m["role"], "content": m["content"]} for m in st.session_state.messages)
             ],
             stream=True
