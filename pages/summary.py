@@ -96,10 +96,17 @@ from openai import OpenAI
 import pandas as pd
 
 dfTransoms=pd.read_csv("pages/transoms.csv")
+
+# df_dict = dfTransoms.to_dict(orient='records')
+
 client = OpenAI(
     api_key=st.secrets["grok_ad_test_001_apikey"], 
     base_url=st.secrets["grok_api_url"],
 )
+# client = OpenAI(
+#     api_key=st.secrets["deepseek_apikey"], 
+#     base_url=st.secrets["deepseek_api_url"],
+# )
 
 ai_container=st.container()
 
@@ -121,8 +128,9 @@ with ai_container:
         # Generate a response using the OpenAI API.
         completion = client.chat.completions.create(
             model="grok-2-latest",
+            # model="deepseek-chat",#deepseek-chat",
             messages=[
-                {"role": "system", "content": f"You are a professional BIMer. your data is {dfTransoms}"}, #BIMer and PhD-level mathematician
+                {"role": "system", "content": f"You are a professional BIMer and programmer. your data is {dfTransoms}"}, #BIMer and PhD-level mathematician
                 *({"role": m["role"], "content": m["content"]} for m in st.session_state.messages)
             ],
             stream=True
@@ -132,6 +140,8 @@ with ai_container:
         
         response = st.write_stream(completion)
         st.session_state.messages.append({"role": "assistant", "content": response})
+        
+print(dfTransoms["length"].sum())
 
 
 
