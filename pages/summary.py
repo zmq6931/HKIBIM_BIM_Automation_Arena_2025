@@ -2,6 +2,20 @@ import streamlit as st
 import streamlit.components.v1 as components
 from openai.types.chat import ChatCompletionMessage
 
+import os
+from openai import OpenAI
+import pandas as pd
+
+
+
+
+
+
+# from pandasai.llm import Grok
+
+
+
+
 st.title("HKIBIM_BIM_Automation_Arena_2025 - Andy")
 st.subheader("Summary")
 st.divider()
@@ -79,7 +93,7 @@ st.divider()
 # """)
 st.write(
     """
-### Standards? Just the foundation—critical, yes, but basic. Automation is the unstoppable core of BIM (Building Information Modeling), powering efficiency and precision, obliterating tedious tasks, and supercharging workflows. Breakthroughs and innovation? They’re the blazing soul of BIM, shattering limits, igniting bold creativity, and unleashing game-changing possibilities. But make no mistake—the BIMer is the ultimate force here. They don’t just use these tools, they command them, fusing structure, efficiency, and genius into a revolution. BIM isn’t just a process—it’s a powerhouse, and the fearless BIMer drives its true, world-shaping potential.
+### Standards? Just the foundation—critical, yes, but basic. Automation is the unstoppable core of BIM (Building Information Modeling), powering efficiency and precision, obliterating tedious tasks, and supercharging workflows. Breakthroughs and innovation? They're the blazing soul of BIM, shattering limits, igniting bold creativity, and unleashing game-changing possibilities. But make no mistake—the BIMer is the ultimate force here. They don't just use these tools, they command them, fusing structure, efficiency, and genius into a revolution. BIM isn't just a process—it's a powerhouse, and the fearless BIMer drives its true, world-shaping potential.
     
 # What is the most important -> BIMer
     """
@@ -91,9 +105,7 @@ st.write("### AI Chat")
 
 
 
-import os
-from openai import OpenAI
-import pandas as pd
+
 
 dfTransoms=pd.read_csv("pages/transoms.csv")
 
@@ -108,39 +120,143 @@ client = OpenAI(
 #     base_url=st.secrets["deepseek_api_url"],
 # )
 
-ai_container=st.container()
+# 创建两个独立的chat会话状态
+if "messages_1" not in st.session_state:
+    st.session_state.messages_1 = []
+if "messages_2" not in st.session_state:
+    st.session_state.messages_2 = []
 
-with ai_container:
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-    for message in st.session_state.messages:
+#region Chat 1
+ai_expander1=st.expander("AI Chat1 - Test deepseek api and grok api ")
+
+with ai_expander1:
+    # 显示Chat 1的消息历史
+    for message in st.session_state.messages_1:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
             
-    if prompt := st.chat_input("What is up?"):
-
-        # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": prompt})
+    if prompt := st.chat_input("Chat 1: What is up?", key="chat_input_1"):
+        # 存储并显示当前prompt
+        st.session_state.messages_1.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
-
-        # Generate a response using the OpenAI API.
+        # 生成回复
         completion = client.chat.completions.create(
             model="grok-2-latest",
-            # model="deepseek-chat",#deepseek-chat",
             messages=[
-                {"role": "system", "content": f"You are a professional BIMer and programmer. your data is {dfTransoms}"}, #BIMer and PhD-level mathematician
-                *({"role": m["role"], "content": m["content"]} for m in st.session_state.messages)
+                {"role": "system", "content": "You are Chat 1: A professional BIMer and programmer."},
+                *({"role": m["role"], "content": m["content"]} for m in st.session_state.messages_1)
             ],
             stream=True
         )
-
-
         
         response = st.write_stream(completion)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        st.session_state.messages_1.append({"role": "assistant", "content": response})
+
+
+#endregion
+
+#region Chat 2
+
+
+
+
+ai_expander2=st.expander("AI Chat2 - PandasAI - use pandasai free apikey")
+with ai_expander2:
+
+    import pandasai as pai
+
+    pai.api_key.set(st.secrets["pandasai_apikey"])
+    file = pai.read_csv(r"pages/transoms.csv")
+    # file = pai.load("pai-personal-3f69d/dataset-name")
+    st.write(file)
+    input_text=st.text_area("input")
+    botton=st.button("submit")
+    # st.write(input_text)
+    if botton:
+        result=pai.chat(input_text,file)
+        if isinstance(result,pd.DataFrame):
+            st.dataframe(result)
+        elif isinstance(result,str):
+            if result.lower().endswith((".png",".jpg",".jpeg")):
+                st.image(result)
+            else:
+                st.write(result)
+        elif isinstance(result,(int,float)):
+            st.write(result)
+        else:
+            st.write(result)
+    
+
+    
+
+
+
+    
+    # 使用 GrokLLM 创建 SmartDataframe
+
+#endregion
+    
+
+#region Chat 3 
+from langchain_experimental.agents.agent_toolkits import create_csv_agent
+from langchain_community.chat_models import ChatOpenAI  # 我们暂时用这个模拟，需替换为 xAI 的实现
+from langchain.agents.agent_types import AgentType
+import sys
+from io import StringIO
+
+old_stdout = sys.stdout
+sys.stdout = captured_output = StringIO()
+
+ai_expander3=st.expander("AI Chat3 - langchain - create_csv_agent - xai")
+with ai_expander3:
+    input_text=st.text_area("input",height=100)
+    botton=st.button("submit",key="submit_botton")
+    if botton:
+        llm = ChatOpenAI(
+        api_key=st.secrets["grok_ad_test_001_apikey"],
+        model="grok-2-latest",  # 替换为 xAI 提供的模型名称
+        temperature=1,
+        base_url=st.secrets["grok_api_url"]  # 假设的 xAI API 端点，需根据文档调整
+        )
+
+        agent = create_csv_agent(
+            llm,
+            r"pages/transoms.csv",  # CSV 文件路径
+            verbose=True,   # 显示详细的推理过程
+            agent_type="zero-shot-react-description",
+            # agent_type="zero-shot-react-description",
+            # agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+            include_df_in_prompt=True,
+            allow_dangerous_code=True,  # 明确允许执行危险代码
+            max_iterations=1
+        )
+        question = input_text
+        response = agent.run(question)
         
+
+        sys.stdout = old_stdout
+        verbose_output = captured_output.getvalue()
+
+
+        print("--------------------------------")
+        print(verbose_output)
+        verbose_output=verbose_output.split("Observation[0m")[1].split("[36;1m[1;3mNameError:")[0]
+        st.write(verbose_output)
+        print("--------------------------------")
+    
+    
+    
+    
+    
+
+
+
+        
+
+
+
 print(dfTransoms["length"].sum())
 
 

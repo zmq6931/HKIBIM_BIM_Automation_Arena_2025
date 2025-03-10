@@ -1,4 +1,9 @@
 .venv/
 __pycache__/
 .vscode/
+cache/
+exports/
+datasets/
+test.py
+pandasai.log
 # pages/summary.py
