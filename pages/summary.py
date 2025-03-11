@@ -124,32 +124,31 @@ client = OpenAI(
 #     base_url=st.secrets["deepseek_api_url"],
 # )
 
-# 创建两个独立的chat会话状态
-if "messages_1" not in st.session_state:
-    st.session_state.messages_1 = []
-if "messages_2" not in st.session_state:
-    st.session_state.messages_2 = []
+
+
+# if "messages_2" not in st.session_state:
+#     st.session_state.messages_2 = []
+
 
 #region Chat 1
 ai_expander1=st.expander("AI Chat1 - Test deepseek api and grok api ")
 
 with ai_expander1:
-    # 显示Chat 1的消息历史
+    if "messages_1" not in st.session_state:
+        st.session_state.messages_1 = []
     for message in st.session_state.messages_1:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
             
     if prompt := st.chat_input("Chat 1: What is up?", key="chat_input_1"):
-        # 存储并显示当前prompt
         st.session_state.messages_1.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        # 生成回复
         completion = client.chat.completions.create(
             model="grok-2-latest",
             messages=[
-                {"role": "system", "content": "You are Chat 1: A professional BIMer and programmer."},
+                {"role": "system", "content": f"You are a PhD-level mathematician and BIMer. your data is {dfTransoms}"},
                 *({"role": m["role"], "content": m["content"]} for m in st.session_state.messages_1)
             ],
             stream=True
@@ -220,29 +219,31 @@ with ai_expander3:
     if botton:
         llm = ChatOpenAI(
         api_key=st.secrets["grok_ad_test_001_apikey"],
-        model="grok-2-latest",  # 替换为 xAI 提供的模型名称
+        model="grok-2-latest",  
         temperature=1,
-        base_url=st.secrets["grok_api_url"]  # 假设的 xAI API 端点，需根据文档调整
+        base_url=st.secrets["grok_api_url"]  
         )
 
         agent = create_csv_agent(
             llm,
-            r"pages/transoms.csv",  # CSV 文件路径
-            verbose=True,   # 显示详细的推理过程
+            r"pages/transoms.csv",  
+            verbose=True,   
             agent_type="zero-shot-react-description",
             # agent_type="zero-shot-react-description",
             # agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             include_df_in_prompt=True,
-            allow_dangerous_code=True,  # 明确允许执行危险代码
-            max_iterations=1
+            allow_dangerous_code=True,  
+            handle_parsing_errors=True,
+            max_iterations=1,
         )
         question = input_text
         response = agent.invoke({"input": question})
         
-
-        # sys.stdout = old_stdout
+        
+        
+        sys.stdout = old_stdout
         verbose_output = captured_output.getvalue()
-        # print(verbose_output)
+        print(verbose_output)
 
 
         output_lines = verbose_output.split("\n")
@@ -259,7 +260,7 @@ with ai_expander3:
         st.write(observation)
         # st.write("aaa")
         
-        
+#endregion  
 print(dfTransoms["length"].sum())
 
 
