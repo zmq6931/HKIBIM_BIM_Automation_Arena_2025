@@ -119,11 +119,14 @@ client = OpenAI(
     api_key=st.secrets["grok_ad_test_001_apikey"], 
     base_url=st.secrets["grok_api_url"],
 )
+model="grok-2-latest"
+
+
 # client = OpenAI(
 #     api_key=st.secrets["deepseek_apikey"], 
 #     base_url=st.secrets["deepseek_api_url"],
 # )
-
+# model="deepseek-chat"
 
 
 # if "messages_2" not in st.session_state:
@@ -146,7 +149,8 @@ with ai_expander1:
             st.markdown(prompt)
 
         completion = client.chat.completions.create(
-            model="grok-2-latest",
+            model=model,
+            # model="grok-2-latest",
             messages=[
                 {"role": "system", "content": f"You are a PhD-level mathematician and BIMer. your data is {dfTransoms}"},
                 *({"role": m["role"], "content": m["content"]} for m in st.session_state.messages_1)
@@ -256,8 +260,22 @@ with ai_expander3:
             #     observation = line.split("Observation")[1].strip()
 
         st.write(thought)
-        observation=verbose_output.split("Observation[0m")[1].split("[36;1m[1;3mNameError:")[0]
-        st.write(observation)
+        # st.write(output_lines)
+        if "Observation[0m" in verbose_output and "[36;1m[1;3mNameError:" in verbose_output:
+            observation=verbose_output.split("Observation[0m")[1].split("[36;1m[1;3mNameError:")[0]
+            st.write(observation)
+        else:            
+            # st.write(verbose_output)
+            st.write(output_lines)
+            st.write(verbose_output)
+        
+        
+        # try:
+        #     observation=verbose_output.split("Observation[0m")[1].split("[36;1m[1;3mNameError:")[0]
+        # except:
+        #     pass
+            
+        # st.write(observation)
         # st.write("aaa")
         
 #endregion  
