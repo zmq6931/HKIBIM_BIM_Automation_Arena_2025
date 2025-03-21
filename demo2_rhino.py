@@ -189,8 +189,8 @@ def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer,iterate_numb
                                     rs.ObjectLayer(tri_srf1,panel_layer)
                                     rs.ObjectLayer(tri_srf2,panel_layer)
                                     rs.SurfaceNormal(tri_srf1,ptlist[pt_index+1])
-                                    normal_line1 = create_Normal_Line(triangle_workplane,ptlist[pt_index+1],300)
-                                    normal_line2 = create_Normal_Line(triangle_workplane,ptlist[pt_index+1],-300)
+                                    normal_line1 = create_Normal_Line(triangle_workplane,ptlist[pt_index+1],thickness)
+                                    normal_line2 = create_Normal_Line(triangle_workplane,ptlist[pt_index+1],-thickness)
                                     
                                     # Extrude triangle surfaces
                                     extruded_tri1 = rs.ExtrudeSurface(tri_srf1, normal_line1)
@@ -214,8 +214,8 @@ def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer,iterate_numb
                                 rs.ObjectLayer(tri_srf2,panel_layer)
                                 rs.SurfaceNormal(tri_srf1,ptlist[pt_index+1])
                                 
-                                normal_line1 = create_Normal_Line(triangle_workplane,ptlist[pt_index+1],300)
-                                normal_line2 = create_Normal_Line(triangle_workplane,ptlist[pt_index+1],-300)
+                                normal_line1 = create_Normal_Line(triangle_workplane,ptlist[pt_index+1],thickness)
+                                normal_line2 = create_Normal_Line(triangle_workplane,ptlist[pt_index+1],-thickness)
                                 
                                 # Extrude triangle surfaces
                                 extruded_tri1 = rs.ExtrudeSurface(tri_srf1, normal_line1)
@@ -268,8 +268,8 @@ rs.ReverseCurve(crv1)
 rs.ReverseCurve(crv2)
 
 
-h_distance=2500
-thickness=100
+h_distance=2500 
+thickness=300
 v_distance=h_distance*(math.sqrt(3)/2)
 
 result1_layer=getLayerByName("result1")
@@ -317,6 +317,8 @@ rs.LayerVisible("result1",False)
 rs.LayerVisible("result2",False)
 
 
+
+        
 
 
 print("finished")
