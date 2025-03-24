@@ -487,11 +487,11 @@ if btn_drawing_generation:
     adfun.mycadfun.dimension3PointAngular(modelSpace,hex_pts[3], hex_pts[2], hex_pts[4],
                                           array.array('d', [hex_pts[3][0]+200, hex_pts[3][1]+600, 0]), 100)
     tri_side = 2500
-    tri_start = array.array('d', [0, -9000 , 0])
+    tri_start = array.array('d', [0, -3*hex_side , 0])
     tri_pts = [
         tri_start,
-        array.array('d', [tri_side, -9000, 0]),
-        array.array('d', [tri_side/2, -9000 + tri_side*math.sqrt(3)/2, 0])
+        array.array('d', [tri_side, -3*hex_side, 0]),
+        array.array('d', [tri_side/2, -3*hex_side + tri_side*math.sqrt(3)/2, 0])
     ]
     
     # Draw triangle lines
