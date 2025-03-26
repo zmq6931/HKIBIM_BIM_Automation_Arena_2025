@@ -130,13 +130,14 @@ def create_Normal_Line(plane,pt,length=1000):
     scaled_normal = rs.VectorScale(normal, length)
     normal_line = rs.AddLine(pt, rs.PointAdd(pt, scaled_normal))
     return normal_line      
-def create_surface_normal_plane_by_pt(surface,pt, bool_if_create_plane_surface=False):
-    param = rs.SurfaceClosestPoint(surface, pt)
-    normal=rs.SurfaceNormal(surface,param)
-    plane=rs.PlaneFromNormal(pt,normal)
-    if bool_if_create_plane_surface:
-        rs.AddPlaneSurface(plane,500,500)
-    return plane
+# def create_surface_normal_plane_by_pt(surface,pt, bool_if_create_plane_surface=False):
+#     param = rs.SurfaceClosestPoint(surface, pt)
+#     normal=rs.SurfaceNormal(surface,param)
+#     plane=rs.PlaneFromNormal(pt,normal)
+#     if bool_if_create_plane_surface:
+#         rs.AddPlaneSurface(plane,500,500)
+#     return plane
+
 def create_panel_and_glass1(offset_crv,surf,glass_layer,panel_layer,iterate_number=5,multi_index_0_or_1=0):
     for i in range(0,iterate_number):
         offset_crv1 = rs.OffsetCurveOnSurface(offset_crv, surf, -i*v_distance)
@@ -268,7 +269,7 @@ rs.ReverseCurve(crv1)
 rs.ReverseCurve(crv2)
 
 
-h_distance=2500 
+h_distance=5000 
 thickness=300
 v_distance=h_distance*(math.sqrt(3)/2)
 
