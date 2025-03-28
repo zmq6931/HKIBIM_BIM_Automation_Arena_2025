@@ -269,7 +269,7 @@ rs.ReverseCurve(crv1)
 rs.ReverseCurve(crv2)
 
 
-h_distance=5000 
+h_distance=2500 
 thickness=300
 v_distance=h_distance*(math.sqrt(3)/2)
 

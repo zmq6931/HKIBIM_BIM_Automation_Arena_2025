@@ -73,10 +73,10 @@ st.divider()
 
 col1,col2=st.columns([1,3.5])
 with col1:
-    st.write("### demo3_solution3")
-    st.image(r"image/qrcode/qr_code_demo3_solution3.png",use_container_width=True)  
+    st.write("### 20250328 3D V1")
+    st.image(r"image/qrcode/qr_code_MasterChallenge_20250328.png",use_container_width=True)  
 with col2:
-    url="https://app.speckle.systems/projects/c3c82e786c/models/d5dc8ed71e"
+    url="https://app.speckle.systems/projects/c3c82e786c/models/48646b195c"
     embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"   
     
     components.html(
@@ -86,7 +86,31 @@ with col2:
     height=600  # Set the height explicitly for the component
     )
 
+col1,col2=st.columns([1,3.5])
+with col1:
+    st.write("### 20250328 3D V2")
+    st.image(r"image/qrcode/qr_code_MasterChallenge_20250328_v2.png",use_container_width=True)  
+with col2:
+    url="https://app.speckle.systems/projects/c3c82e786c/models/7f96d0a740"
+    embed_url=f"{url}#embed=%7B%22isEnabled%22%3Atrue%7D"   
+    
+    components.html(
+        f"""
+    <iframe title="Speckle" src="{embed_url}" style="width:100%; height:600px;" frameborder="1"></iframe>
+        """, 
+    height=600  # Set the height explicitly for the component
+    )
+
+
+
 st.divider()
+
+st.write("### GitHub")
+st.write("- HKIBIM_Automation_2025_Demo2_Grasshopper_Plugins -> https://github.com/zmq6931/HKIBIM_Automation_2025_Demo2_Grasshopper_Plugins.git")
+st.write("- HKIBIM_BIM_Automation_Arena_2025 -> Master Challenge 2025 -> https://github.com/zmq6931/HKIBIM_BIM_Automation_Arena_2025.git")
+st.image(r"image/others/github_pic1.png",width=1000)
+st.divider()
+
 # st.markdown("""
 # ### - BIM is not a single software, it's a collaborative process that requires multiple software tools from project start to finish, leveraging the strengths of each software, forming a complete workflow or solution from the design phase through to completion and even operation and maintenance.
 # ### - BIM is a process that continuously evolves, iterates, and optimizes with the development of software, hardware, and the experience of project team members.
