@@ -7,4 +7,5 @@ datasets/
 test.py
 pandasai.log
 .streamlit
+
 # pages/summary.py
